@@ -2,7 +2,7 @@ package main
 
 import (
 	"errors"
-	"fmt"
+	weather "github.com/3crabs/go-yandex-weather-api"
 	tgbot "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/umputun/go-flags"
 	"log"
@@ -11,23 +11,18 @@ import (
 	"student_bot/date"
 	"student_bot/messages"
 	"student_bot/parser"
+	"time"
 )
 
 type Opts struct {
 	Token string `short:"t" long:"token" description:"Telegram api token"`
+	Key   string `short:"k" long:"key" description:"Yandex weather API key"`
 }
 
 var opts Opts
 
 func main() {
-	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()-1), "", "no"))
-	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()), "", "no"))
-	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()+1), "", "no"))
-	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()+2), "", "no"))
-	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()+3), "", "no"))
-	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()+4), "", "no"))
-	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()+5), "", "no"))
-	//run()
+	run()
 }
 
 func run() {
@@ -93,6 +88,16 @@ func run() {
 				"Завтра, "+update.Message.From.FirstName+", эти пары:",
 				"Завтра пар нет",
 			)))
+			continue
+		}
+
+		// command /weather
+		if strings.Contains(update.Message.Text, "/weather") {
+			w, err := weather.GetWeatherWithCache(opts.Key, 53.346853, 83.777012, time.Hour)
+			if err != nil {
+				continue
+			}
+			_, _ = bot.Send(tgbot.NewMessage(update.Message.Chat.ID, messages.WeatherMessage(w)))
 			continue
 		}
 	}

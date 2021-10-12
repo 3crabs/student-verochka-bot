@@ -2,6 +2,7 @@ package messages
 
 import (
 	"fmt"
+	weather "github.com/3crabs/go-yandex-weather-api"
 	"strings"
 	"student_bot/parser"
 )
@@ -41,6 +42,7 @@ func PongMessage() string {
 // HelpMessage
 //today_lessons - пары сегодня
 //tomorrow_lessons - пары завтра
+//weather - погода у универа
 //ping - проверка связи
 //help - помощь
 func HelpMessage() string {
@@ -48,5 +50,19 @@ func HelpMessage() string {
 		"- /ping и я отобью pong\n" +
 		"- /today_lessons и я покажу расписание на сегодня\n" +
 		"- /tomorrow_lessons и я покажу расписание на завтра\n" +
+		"- /weather и я покажу погоду у универа\n" +
 		"\nНу а больше я пока ничего не умею"
+}
+
+func WeatherMessage(w weather.Weather) string {
+	s := fmt.Sprintf("Сегодня у универа:\n\n"+
+		"Температура %d°C\n"+
+		"Ощущается как %d°C\n"+
+		"Скорость ветра %d°C\n"+
+		"Порывы ветра до %d м/с\n",
+		w.Fact.Temp,
+		w.Fact.FeelsLike,
+		w.Fact.WindSpeed,
+		w.Fact.WindGust)
+	return s
 }
