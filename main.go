@@ -68,6 +68,7 @@ func main() {
 		if strings.Contains(update.Message.Text, "/today_lessons") {
 			_, _ = bot.Send(tgbot.NewMessage(update.Message.Chat.ID, messages.LessonsMessage(
 				parser.ParseByDay(date.Today()),
+				"Сегодня",
 				"Сегодня пар нет",
 			)))
 			continue
@@ -77,6 +78,7 @@ func main() {
 		if strings.Contains(update.Message.Text, "/tomorrow_lessons") {
 			_, _ = bot.Send(tgbot.NewMessage(update.Message.Chat.ID, messages.LessonsMessage(
 				parser.ParseByDay(date.Today()+1),
+				"Завтра",
 				"Завтра пар нет",
 			)))
 			continue

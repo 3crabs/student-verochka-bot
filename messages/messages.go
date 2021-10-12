@@ -2,15 +2,19 @@ package messages
 
 import (
 	"fmt"
+	"strings"
 	"student_bot/parser"
 )
 
-func LessonsMessage(schedule []parser.Lesson, text string) string {
+func LessonsMessage(schedule []parser.Lesson, prefix, emptyText string) string {
 	if len(schedule) == 0 {
-		return text
+		return emptyText
 	}
-	s := "Сегодня\n"
+	s := prefix + "\n\n"
 	for _, l := range schedule {
+		if strings.Contains(l.User, "Ярных В.В.") {
+			s += "⭐️ "
+		}
 		s += fmt.Sprintf("%s %s (%s)\n", l.Time, l.Name, l.Place)
 	}
 	return s + "\n" +
