@@ -10,17 +10,24 @@ func LessonsMessage(schedule []parser.Lesson, prefix, emptyText string) string {
 	if len(schedule) == 0 {
 		return emptyText
 	}
-	s := prefix + "\n\n"
+
+	s := ""
+	if prefix != "" {
+		s += prefix + "\n\n"
+	}
 	for _, l := range schedule {
 		if strings.Contains(l.User, "Ярных В.В.") {
 			s += "⭐️ "
 		}
 		s += fmt.Sprintf("%s %s (%s)\n", l.Time, l.Name, l.Place)
 	}
-	return s + "\n" +
-		"Д — Димитрова 66 (Филологический, социологический факультеты, отделе)\n" +
-		"Л — Ленина 61 (Математический и биологический факультеты)\n" +
-		"М — Ленина 61а (Исторический и географический факультеты)"
+	if prefix != "" {
+		s += "\n" +
+			"Д — Димитрова 66 (Филологический, социологический факультеты, отделе)\n" +
+			"Л — Ленина 61 (Математический и биологический факультеты)\n" +
+			"М — Ленина 61а (Исторический и географический факультеты)"
+	}
+	return s
 }
 
 func StartMessage() string {

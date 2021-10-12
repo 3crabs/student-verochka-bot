@@ -72,28 +72,36 @@ func parse() []Lesson {
 				l.Day = 6
 			}
 		}
-		if text != "" {
-			n := (k - 1) % 6
-			if n == 0 {
-				l.Number = text
+		n := (k - 1) % 6
+		if n == 0 {
+			l.Number = trim(text)
+		}
+		if n == 1 {
+			l.Time = trim(text)
+		}
+		if n == 2 {
+			l.Name = trim(text)
+		}
+		if n == 3 {
+			l.User = trim(text)
+		}
+		if n == 4 {
+			l.Place = trim(text)
+			if l.Place == "" {
+				l.Place = "не приходи"
 			}
-			if n == 1 {
-				l.Time = text
-			}
-			if n == 2 {
-				l.Name = text
-			}
-			if n == 3 {
-				l.User = text
-			}
-			if n == 4 {
-				l.Place = text
-				lessons = append(lessons, l)
-			}
+			lessons = append(lessons, l)
 		}
 		k++
 	})
 	return lessons
+}
+
+func trim(s string) string {
+	s = strings.Replace(s, "пр.з.", "пр.", -1)
+	s = strings.Replace(s, "  ", "", -1)
+	s = strings.Replace(s, "\n", " ", -1)
+	return s
 }
 
 func selectLessonsByDay(schedule []Lesson, day int) []Lesson {

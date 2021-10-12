@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	tgbot "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/umputun/go-flags"
 	"log"
@@ -19,6 +20,17 @@ type Opts struct {
 var opts Opts
 
 func main() {
+	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()-1), "", "no"))
+	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()), "", "no"))
+	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()+1), "", "no"))
+	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()+2), "", "no"))
+	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()+3), "", "no"))
+	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()+4), "", "no"))
+	fmt.Println(messages.LessonsMessage(parser.ParseByDay(date.Today()+5), "", "no"))
+	//run()
+}
+
+func run() {
 	p := flags.NewParser(&opts, flags.PrintErrors|flags.PassDoubleDash|flags.HelpFlag)
 	p.SubcommandsOptional = true
 	if _, err := p.Parse(); err != nil {
@@ -68,7 +80,7 @@ func main() {
 		if strings.Contains(update.Message.Text, "/today_lessons") {
 			_, _ = bot.Send(tgbot.NewMessage(update.Message.Chat.ID, messages.LessonsMessage(
 				parser.ParseByDay(date.Today()),
-				"Сегодня",
+				"Сегодня, "+update.Message.From.FirstName+", эти пары:",
 				"Сегодня пар нет",
 			)))
 			continue
@@ -78,7 +90,7 @@ func main() {
 		if strings.Contains(update.Message.Text, "/tomorrow_lessons") {
 			_, _ = bot.Send(tgbot.NewMessage(update.Message.Chat.ID, messages.LessonsMessage(
 				parser.ParseByDay(date.Today()+1),
-				"Завтра",
+				"Завтра, "+update.Message.From.FirstName+", эти пары:",
 				"Завтра пар нет",
 			)))
 			continue
