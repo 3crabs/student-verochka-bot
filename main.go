@@ -2,12 +2,13 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	weather "github.com/3crabs/go-yandex-weather-api"
 	tgbot "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/umputun/go-flags"
 	"log"
 	"os"
-	"strings"
+	"student_bot/commands"
 	"student_bot/date"
 	"student_bot/messages"
 	"student_bot/parser"
@@ -53,52 +54,46 @@ func run() {
 			continue
 		}
 
-		// command /start
-		if strings.Contains(update.Message.Text, "/start") {
-			_, _ = bot.Send(tgbot.NewMessage(update.Message.Chat.ID, messages.StartMessage()))
-			continue
-		}
+		text := update.Message.Text
+		chatId := update.Message.Chat.ID
 
-		// command /help
-		if strings.Contains(update.Message.Text, "/help") {
-			_, _ = bot.Send(tgbot.NewMessage(update.Message.Chat.ID, messages.HelpMessage()))
-			continue
-		}
+		switch commands.Command(text) {
 
-		// command /ping
-		if strings.Contains(update.Message.Text, "/ping") {
-			_, _ = bot.Send(tgbot.NewMessage(update.Message.Chat.ID, messages.PongMessage()))
-			continue
-		}
+		case commands.Start:
+			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.StartMessage()))
 
-		// command /today_lessons
-		if strings.Contains(update.Message.Text, "/today_lessons") {
-			_, _ = bot.Send(tgbot.NewMessage(update.Message.Chat.ID, messages.LessonsMessage(
+		case commands.Help:
+			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.HelpMessage()))
+
+		case commands.Ping:
+			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.PongMessage()))
+
+		case commands.TodayLessons:
+			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.LessonsMessage(
 				parser.ParseByDay(date.Today()),
 				"Сегодня, "+update.Message.From.FirstName+", эти пары:",
 				"Сегодня пар нет",
 			)))
-			continue
-		}
 
-		// command /tomorrow_lessons
-		if strings.Contains(update.Message.Text, "/tomorrow_lessons") {
-			_, _ = bot.Send(tgbot.NewMessage(update.Message.Chat.ID, messages.LessonsMessage(
+		case commands.TomorrowLessons:
+			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.LessonsMessage(
 				parser.ParseByDay(date.Today()+1),
 				"Завтра, "+update.Message.From.FirstName+", эти пары:",
 				"Завтра пар нет",
 			)))
-			continue
-		}
 
-		// command /weather
-		if strings.Contains(update.Message.Text, "/weather") {
+		case commands.Weather:
 			w, err := weather.GetWeatherWithCache(opts.Key, 53.346853, 83.777012, time.Hour)
 			if err != nil {
 				continue
 			}
-			_, _ = bot.Send(tgbot.NewMessage(update.Message.Chat.ID, messages.WeatherMessage(w)))
-			continue
+			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.WeatherMessage(w)))
+
+		case commands.NewYear:
+			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.NewYearMessage()))
+
+		default:
+			fmt.Println("[p")
 		}
 	}
 }
