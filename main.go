@@ -2,12 +2,12 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	weather "github.com/3crabs/go-yandex-weather-api"
 	tgbot "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/umputun/go-flags"
 	"log"
 	"os"
+	"strings"
 	"student_bot/commands"
 	"student_bot/date"
 	"student_bot/messages"
@@ -57,7 +57,7 @@ func run() {
 		text := update.Message.Text
 		chatId := update.Message.Chat.ID
 
-		switch commands.Command(text) {
+		switch commands.Command(strings.Replace(text, "@student_verochka_bot", "", 1)) {
 
 		case commands.Start:
 			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.StartMessage()))
@@ -93,7 +93,6 @@ func run() {
 			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.NewYearMessage()))
 
 		default:
-			fmt.Println("[p")
 		}
 	}
 }

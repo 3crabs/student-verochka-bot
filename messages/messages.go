@@ -54,8 +54,8 @@ func WeatherMessage(w weather.Weather) string {
 	s := fmt.Sprintf("Сегодня у универа:\n\n"+
 		"Температура %d°C\n"+
 		"Ощущается как %d°C\n"+
-		"Скорость ветра %d°C\n"+
-		"Порывы ветра до %d м/с\n",
+		"Скорость ветра %dм/с\n"+
+		"Порывы ветра до %dм/с\n",
 		w.Fact.Temp,
 		w.Fact.FeelsLike,
 		w.Fact.WindSpeed,
