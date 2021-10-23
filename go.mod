@@ -3,7 +3,7 @@ module student_bot
 go 1.17
 
 require (
-	github.com/3crabs/go-yandex-weather-api v0.4.0
+	github.com/3crabs/go-yandex-weather-api v0.6.0
 	github.com/PuerkitoBio/goquery v1.7.1
 	github.com/go-telegram-bot-api/telegram-bot-api v4.6.4+incompatible
 	github.com/umputun/go-flags v1.5.1

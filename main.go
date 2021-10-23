@@ -18,6 +18,7 @@ import (
 type Opts struct {
 	Token string `short:"t" long:"token" description:"Telegram api token"`
 	Key   string `short:"k" long:"key" description:"Yandex weather API key"`
+	Name  string `short:"n" long:"name" description:"Telegram bot name" default:"@student_verochka_bot"`
 }
 
 var opts Opts
@@ -57,7 +58,7 @@ func run() {
 		text := update.Message.Text
 		chatId := update.Message.Chat.ID
 
-		switch commands.Command(strings.Replace(text, "@student_verochka_bot", "", 1)) {
+		switch commands.Command(strings.Replace(text, opts.Name, "", 1)) {
 
 		case commands.Start:
 			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.StartMessage()))

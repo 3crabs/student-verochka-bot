@@ -1,5 +1,5 @@
-github.com/3crabs/go-yandex-weather-api v0.4.0 h1:z7KWZKZZ6o0yXeXWODBZsmDCJqw7TZ+C8N3PiS02toA=
-github.com/3crabs/go-yandex-weather-api v0.4.0/go.mod h1:MZLPelQjylEK4nPL9g2cpnAPtqzOpF/SrtRGWXK7QHs=
+github.com/3crabs/go-yandex-weather-api v0.6.0 h1:EpqAfaStJNVRNRyYsvUmiNFQYGrQ+eXVP2e+vMWIh08=
+github.com/3crabs/go-yandex-weather-api v0.6.0/go.mod h1:MZLPelQjylEK4nPL9g2cpnAPtqzOpF/SrtRGWXK7QHs=
 github.com/PuerkitoBio/goquery v1.7.1 h1:oE+T06D+1T7LNrn91B4aERsRIeCLJ/oPSa6xB9FPnz4=
 github.com/PuerkitoBio/goquery v1.7.1/go.mod h1:XY0pP4kfraEmmV1O7Uf6XyjoslwsneBbgeDjLYuN8xY=
 github.com/andybalholm/cascadia v1.2.0/go.mod h1:YCyR8vOZT9aZ1CHEd8ap0gMVm2aFgxBp0T0eFw1RUQY=

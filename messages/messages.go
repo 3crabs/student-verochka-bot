@@ -52,16 +52,25 @@ func LessonsMessage(schedule []parser.Lesson, prefix, emptyText string) string {
 }
 
 func WeatherMessage(w weather.Weather) string {
-	s := fmt.Sprintf("Сегодня у универа:\n\n"+
-		"Температура %d°C\n"+
-		"Ощущается как %d°C\n"+
-		"Скорость ветра %dм/с\n"+
-		"Порывы ветра до %dм/с\n",
+	return fmt.Sprintf("Сейчас у универа:\n"+
+		"%s\n"+
+		"Температура: %d°C\n"+
+		"Ощущается как: %d°C\n"+
+		"Скорость ветра: %dм/с\n"+
+		"\nПогода на %s:\n"+
+		"%s\n"+
+		"Температура: %d°C\n"+
+		"Ощущается как: %d°C\n"+
+		"Скорость ветра: %dм/с\n",
+		w.Fact.GetCondition(),
 		w.Fact.Temp,
 		w.Fact.FeelsLike,
 		w.Fact.WindSpeed,
-		w.Fact.WindGust)
-	return s
+		w.Forecast.Parts[0].GetPartName(),
+		w.Forecast.Parts[0].GetCondition(),
+		w.Forecast.Parts[0].TempAvg,
+		w.Forecast.Parts[0].FeelsLike,
+		w.Forecast.Parts[0].WindSpeed)
 }
 
 func NewYearMessage() string {
