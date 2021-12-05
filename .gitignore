@@ -1,3 +1,4 @@
 .idea
 *.json
 /bin
+!/config/images.json

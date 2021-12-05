@@ -10,6 +10,7 @@ import (
 	"strings"
 	"student_bot/commands"
 	"student_bot/date"
+	"student_bot/file"
 	"student_bot/messages"
 	"student_bot/parser"
 	"time"
@@ -91,7 +92,9 @@ func run() {
 			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.WeatherMessage(w)))
 
 		case commands.NewYear:
-			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.NewYearMessage()))
+			msg := tgbot.NewPhotoShare(chatId, file.RandomFileFromConfig())
+			msg.Caption = messages.NewYearMessage()
+			_, _ = bot.Send(msg)
 
 		default:
 		}
