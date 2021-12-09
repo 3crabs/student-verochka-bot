@@ -11,6 +11,6 @@ func NewImageServiceLogWrapper(service ImageService) ImageService {
 }
 
 func (w *imageServiceLogWrapper) GetRandomImageURL() string {
-	log.Panicln("get random image url")
+	log.Println("get random image url")
 	return w.service.GetRandomImageURL()
 }
