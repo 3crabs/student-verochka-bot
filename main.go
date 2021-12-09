@@ -2,18 +2,19 @@ package main
 
 import (
 	"errors"
-	weather "github.com/3crabs/go-yandex-weather-api"
-	tgbot "github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/umputun/go-flags"
 	"log"
 	"os"
 	"strings"
 	"student_bot/commands"
 	"student_bot/date"
-	"student_bot/file"
+	"student_bot/image"
 	"student_bot/messages"
 	"student_bot/parser"
 	"time"
+
+	weather "github.com/3crabs/go-yandex-weather-api"
+	tgbot "github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/umputun/go-flags"
 )
 
 type Opts struct {
@@ -38,6 +39,11 @@ func run() {
 		os.Exit(2)
 	}
 
+	imageService, err := image.NewImageService()
+	if err != nil {
+		panic(err)
+	}
+
 	bot, err := tgbot.NewBotAPI(opts.Token)
 	if err != nil {
 		log.Println(err)
@@ -48,6 +54,7 @@ func run() {
 	u.Timeout = 60
 
 	updates, err := bot.GetUpdatesChan(u)
+	log.Println("Bot is start up!")
 
 	for update := range updates {
 
@@ -92,7 +99,8 @@ func run() {
 			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.WeatherMessage(w)))
 
 		case commands.NewYear:
-			msg := tgbot.NewPhotoShare(chatId, file.RandomFileFromConfig())
+			url := imageService.GetImage()
+			msg := tgbot.NewPhotoShare(chatId, url)
 			msg.Caption = messages.NewYearMessage()
 			_, _ = bot.Send(msg)
 
