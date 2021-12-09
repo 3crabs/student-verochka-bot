@@ -1,4 +1,4 @@
 .idea
 *.json
 /bin
-!/config/newYearImages.json
+!/config/new_year_config.json

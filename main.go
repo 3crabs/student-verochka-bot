@@ -7,7 +7,7 @@ import (
 	"strings"
 	"student_bot/commands"
 	"student_bot/date"
-	"student_bot/image"
+	"student_bot/image_service"
 	"student_bot/messages"
 	"student_bot/parser"
 	"time"
@@ -39,21 +39,25 @@ func run() {
 		os.Exit(2)
 	}
 
-	imageService, err := image.NewImageService()
+	imageService, err := image_service.NewImageService()
 	if err != nil {
 		panic(err)
 	}
+	imageService = image_service.NewImageServiceLogWrapper(imageService)
 
 	bot, err := tgbot.NewBotAPI(opts.Token)
 	if err != nil {
-		log.Println(err)
-		return
+		panic(err)
 	}
 
 	u := tgbot.NewUpdate(0)
 	u.Timeout = 60
 
 	updates, err := bot.GetUpdatesChan(u)
+	if err != nil {
+		panic(err)
+	}
+
 	log.Println("Bot is start up!")
 
 	for update := range updates {
@@ -99,7 +103,7 @@ func run() {
 			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.WeatherMessage(w)))
 
 		case commands.NewYear:
-			url := imageService.GetImage()
+			url := imageService.GetRandomImageURL()
 			msg := tgbot.NewPhotoShare(chatId, url)
 			msg.Caption = messages.NewYearMessage()
 			_, _ = bot.Send(msg)
