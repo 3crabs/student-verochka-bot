@@ -3,12 +3,13 @@ package main
 import (
 	"errors"
 	"log"
+	"math/rand"
 	"os"
 	"strings"
 	"student_bot/commands"
 	"student_bot/date"
-	"student_bot/image_service"
 	"student_bot/messages"
+	"student_bot/new_year_service"
 	"student_bot/parser"
 	"time"
 
@@ -30,6 +31,8 @@ func main() {
 }
 
 func run() {
+	rand.Seed(time.Now().UnixNano())
+
 	p := flags.NewParser(&opts, flags.PrintErrors|flags.PassDoubleDash|flags.HelpFlag)
 	p.SubcommandsOptional = true
 	if _, err := p.Parse(); err != nil {
@@ -39,11 +42,11 @@ func run() {
 		os.Exit(2)
 	}
 
-	imageService, err := image_service.NewImageService()
+	imageService, err := new_year_service.NewNewYearService()
 	if err != nil {
 		panic(err)
 	}
-	imageService = image_service.NewImageServiceLogWrapper(imageService)
+	imageService = new_year_service.NewNewYearServiceLogWrapper(imageService)
 
 	bot, err := tgbot.NewBotAPI(opts.Token)
 	if err != nil {
@@ -104,8 +107,9 @@ func run() {
 
 		case commands.NewYear:
 			url := imageService.GetRandomImageURL()
+			message := imageService.GetRandomMessage()
 			msg := tgbot.NewPhotoShare(chatId, url)
-			msg.Caption = messages.NewYearMessage()
+			msg.Caption = messages.NewYearMessage(message)
 			_, _ = bot.Send(msg)
 
 		default:

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	weather "github.com/3crabs/go-yandex-weather-api"
 	"strings"
+	"student_bot/new_year_service"
 	"student_bot/parser"
 	"time"
 )
@@ -73,12 +74,12 @@ func WeatherMessage(w weather.Weather) string {
 		w.Forecast.Parts[0].WindSpeed)
 }
 
-func NewYearMessage() string {
+func NewYearMessage(message new_year_service.NewYearMessage) string {
 	loc := time.FixedZone("UTC+7", +7*60*60)
 	ny := time.Date(2022, 1, 1, 0, 0, 0, 0, loc)
 	now := time.Now().In(loc)
 	days := ny.Sub(now).Hours() / 24
-	return toStrDays(int(days))
+	return fmt.Sprintf("❄ %s ❄ \n\n%s\n\n%s", toStrDays(int(days)), message.Header, message.Text)
 }
 
 func toStrDays(days int) string {
