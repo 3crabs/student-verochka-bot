@@ -76,7 +76,7 @@ func WeatherMessage(w weather.Weather) string {
 
 func NewYearMessage(message new_year_service.NewYearMessage) string {
 	loc := time.FixedZone("UTC+7", +7*60*60)
-	ny := time.Date(2022, 1, 1, 0, 0, 0, 0, loc)
+	ny := time.Date(2023, 1, 1, 0, 0, 0, 0, loc)
 	now := time.Now().In(loc)
 	days := ny.Sub(now).Hours() / 24
 	return fmt.Sprintf("❄ %s ❄ \n\n%s\n\n%s", toStrDays(int(days)), message.Header, message.Text)
