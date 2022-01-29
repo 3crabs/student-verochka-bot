@@ -3,6 +3,7 @@ package messages
 import (
 	"fmt"
 	weather "github.com/3crabs/go-yandex-weather-api"
+	"math/rand"
 	"strings"
 	"student_bot/new_year_service"
 	"student_bot/parser"
@@ -11,6 +12,18 @@ import (
 
 func StartMessage() string {
 	return "Привет, я Верочка!"
+}
+
+var thanksMessages = []string{
+	"Обращайся",
+	"Пожалуйста",
+	"Всегда рада помочь",
+	"Да незачто",
+	"Всегда к вашим услугим",
+}
+
+func ThanksMessage() string {
+	return thanksMessages[rand.Intn(len(thanksMessages)-1)]
 }
 
 func HelpMessage() string {

@@ -24,6 +24,8 @@ type Opts struct {
 	Name  string `short:"n" long:"name" description:"Telegram bot name" default:"@student_verochka_bot"`
 }
 
+var sendMessage = false
+
 var opts Opts
 
 func main() {
@@ -44,13 +46,13 @@ func run() {
 
 	imageService, err := new_year_service.NewNewYearService()
 	if err != nil {
-		panic(err)
+		log.Panicln(err)
 	}
 	imageService = new_year_service.NewNewYearServiceLogWrapper(imageService)
 
 	bot, err := tgbot.NewBotAPI(opts.Token)
 	if err != nil {
-		panic(err)
+		log.Panicln(err)
 	}
 
 	u := tgbot.NewUpdate(0)
@@ -58,7 +60,7 @@ func run() {
 
 	updates, err := bot.GetUpdatesChan(u)
 	if err != nil {
-		panic(err)
+		log.Panicln(err)
 	}
 
 	log.Println("Bot is start up!")
@@ -73,26 +75,36 @@ func run() {
 		text := update.Message.Text
 		chatId := update.Message.Chat.ID
 
-		switch commands.Command(strings.Replace(text, opts.Name, "", 1)) {
+		if strings.Contains(strings.ToLower(text), "спасибо") {
+			if sendMessage {
+				_, _ = bot.Send(tgbot.NewMessage(chatId, messages.ThanksMessage()))
+				sendMessage = false
+			}
+			continue
+		}
+		sendMessage = false
+
+		command := commands.Command(strings.Replace(text, opts.Name, "", 1))
+		switch command {
 
 		case commands.Start:
-			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.StartMessage()))
+			send(bot, tgbot.NewMessage(chatId, messages.StartMessage()))
 
 		case commands.Help:
-			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.HelpMessage()))
+			send(bot, tgbot.NewMessage(chatId, messages.HelpMessage()))
 
 		case commands.Ping:
-			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.PongMessage()))
+			send(bot, tgbot.NewMessage(chatId, messages.PongMessage()))
 
 		case commands.TodayLessons:
-			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.LessonsMessage(
+			send(bot, tgbot.NewMessage(chatId, messages.LessonsMessage(
 				parser.ParseByDay(date.Today()),
 				"Сегодня, "+update.Message.From.FirstName+", эти пары:",
 				"Сегодня пар нет",
 			)))
 
 		case commands.TomorrowLessons:
-			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.LessonsMessage(
+			send(bot, tgbot.NewMessage(chatId, messages.LessonsMessage(
 				parser.ParseByDay(date.Today()+1),
 				"Завтра, "+update.Message.From.FirstName+", эти пары:",
 				"Завтра пар нет",
@@ -103,16 +115,21 @@ func run() {
 			if err != nil {
 				continue
 			}
-			_, _ = bot.Send(tgbot.NewMessage(chatId, messages.WeatherMessage(w)))
+			send(bot, tgbot.NewMessage(chatId, messages.WeatherMessage(w)))
 
 		case commands.NewYear:
 			url := imageService.GetRandomImageURL()
 			message := imageService.GetRandomMessage()
 			msg := tgbot.NewPhotoShare(chatId, url)
 			msg.Caption = messages.NewYearMessage(message)
-			_, _ = bot.Send(msg)
+			send(bot, msg)
 
 		default:
 		}
 	}
+}
+
+func send(bot *tgbot.BotAPI, msg tgbot.Chattable) {
+	_, _ = bot.Send(msg)
+	sendMessage = true
 }
